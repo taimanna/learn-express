@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser'
 import configViewEngine from './config/viewEngine'
+import connectDB from './config/connectDB'
 import express from 'express'
 import initWebRoutes from './route/web'
 
@@ -11,6 +12,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 configViewEngine(app)
 initWebRoutes(app)
+
+connectDB()
 
 const port = process.env.PORT || 3000
 

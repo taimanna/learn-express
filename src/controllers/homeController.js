@@ -4,9 +4,7 @@ import db from '../models/index'
 const getHomePage = async (req, res) => {
   try {
     const data = await db.User.findAll()
-    return res.render('homepage.ejs', {
-      data: JSON.stringify(data),
-    })
+    return res.render('crud.ejs')
   } catch (err) {
     console.log(err)
   }
@@ -14,7 +12,6 @@ const getHomePage = async (req, res) => {
 
 const readCRUD = async (req, res) => {
   const data = await CRUDService.getAllUser()
-  console.log(data)
   return res.render('readCRUD.ejs', { data: data })
 }
 
@@ -22,7 +19,6 @@ const editCRUD = async (req, res) => {
   const userId = req.query.id
   if (userId) {
     const userData = await CRUDService.getUserById(userId)
-    console.log(userData)
     if (userData) {
       return res.render('editCRUD.ejs', { data: userData })
     }
@@ -31,18 +27,24 @@ const editCRUD = async (req, res) => {
 }
 
 const postCRUD = async (req, res) => {
-  const message = await CRUDService.createNewUser(req.body)
-  console.log(message)
+  const data = req.body
+  await CRUDService.createNewUser(data)
   return res.send('post crud')
 }
 
 const putCRUD = async (req, res) => {
+  const data = req.body
+  const allUsers = await CRUDService.updateUserById(data)
+  return res.render('readCRUD.ejs', { data: allUsers })
+}
+
+const deleteCRUD = async (req, res) => {
   const userId = req.query.id
-  console.log(userId)
-  // const message = await CRUDService.updateUserById(userId, req.body)
-  // console.log('update user')
-  // console.log(message)
-  return res.send('put crud')
+  if (userId) {
+    const allUsers = await CRUDService.deleteUserById(userId)
+    return res.render('readCRUD.ejs', { data: allUsers })
+  }
+  return res.send('User not found')
 }
 
 module.exports = {
@@ -51,4 +53,5 @@ module.exports = {
   postCRUD,
   editCRUD,
   putCRUD,
+  deleteCRUD,
 }

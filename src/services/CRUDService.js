@@ -47,11 +47,24 @@ const getUserById = (userId) => {
   })
 }
 
-const updateUserById = (userId, data) => {
+const updateUserById = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      await db.User.update(data, { where: { id: userId }, raw: true })
-      resolve()
+      await db.User.update(data, { where: { id: data.id } })
+      const allUsers = await db.User.findAll()
+      resolve(allUsers)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+const deleteUserById = (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await db.User.destroy({ where: { id: userId } })
+      const allUsers = await db.User.findAll()
+      resolve(allUsers)
     } catch (e) {
       reject(e)
     }
@@ -63,4 +76,5 @@ module.exports = {
   getAllUser,
   getUserById,
   updateUserById,
+  deleteUserById,
 }
